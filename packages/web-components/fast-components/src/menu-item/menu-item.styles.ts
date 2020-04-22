@@ -13,7 +13,6 @@ import {
 
 export const MenuItemStyles = css`
     ${display("grid")} :host {
-        position: relative;
         outline: none;
         box-sizing: border-box;
         height: calc(${heightNumber} * 1px);
@@ -78,7 +77,7 @@ export const MenuItemStyles = css`
         display: none;
     }
 
-    .expanded {
+    :host(.expanded) .menu {
         display: block;
     }
 `.withBehaviors(
