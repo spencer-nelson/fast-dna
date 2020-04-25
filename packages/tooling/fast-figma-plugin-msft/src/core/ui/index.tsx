@@ -486,7 +486,15 @@ export class PluginUI extends React.Component<PluginUIProps> {
                             </div>
                         ) : null}
                     </td-drawer>
-                    <button className="button">Export</button>
+                    <button
+                        className="button"
+                        onClick={this.props.dispatch.bind(this, {
+                            type: MessageTypes.export,
+                            nodeIds: this.props.selectedNodes.map(node => node.id),
+                        })}
+                    >
+                        Export
+                    </button>
                 </div>
                 {this.renderFooter()}
             </div>

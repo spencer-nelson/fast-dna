@@ -134,6 +134,9 @@ export abstract class Controller {
                 message.nodeIds.forEach(id => this.paintTree(id));
                 this.setPluginUIState(this.getPluginUIState());
                 break;
+            case MessageTypes.export:
+                message.nodeIds.forEach(id => this.exportSelection(id));
+                break;
         }
     }
 
@@ -244,4 +247,176 @@ export abstract class Controller {
             }
         });
     }
+
+    private exportSelection(id: string): void {
+        // Get the plugin node
+        const selectedNode = this.getNode(id);
+        if (selectedNode) {
+            this.exportAll(selectedNode);
+        }
+    }
+
+    private exportAll(node: PluginNode): [string] {
+        var names: [string] = [""];
+        if (!node) return names;
+        var exportDict = {};
+
+        if (node?.type == "INSTANCE") {
+            const figmaNode = figma.getNodeById(node.id);
+            if (figmaNode?.type == "INSTANCE") {
+                const master = figmaNode.masterComponent;
+                var categoryDict = {};
+                var categoryName = componentNameCategoryLookup[master.name];
+                if (categoryName) {
+                    categoryDict[categoryName] = {};
+                } else {
+                    // console.log ('Need name alias for ' + master.id + ' with name ' + master.name + ', using \"unknown\"')
+                    // categoryName = 'unknown'
+                }
+                node.recipes.forEach(id => {
+                    let recipeData = this.recipeRegistry.toData(id, node);
+
+                    var tokenAttribute = "";
+                    var attributeStyle = "";
+                    var styleDetail = "";
+                    var detailVariation = "";
+
+                    switch (recipeData.type) {
+                        case RecipeTypes.backgroundFills:
+                            tokenAttribute = "Root";
+                            attributeStyle = "Fill";
+                            styleDetail = "Color";
+                            break;
+                        case RecipeTypes.foregroundFills:
+                            tokenAttribute = "Root";
+                            attributeStyle = "Fill";
+                            styleDetail = "Color";
+                            break;
+                        case RecipeTypes.strokeFills:
+                            tokenAttribute = "Root";
+                            attributeStyle = "Fill";
+                            styleDetail = "Color";
+                            break;
+                        case RecipeTypes.cornerRadius:
+                            tokenAttribute = "Root";
+                            attributeStyle = "Corner";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    // console.log(recipeData)
+                    var tokenAlias = recipeAlias[recipeData.id];
+                    var objectToken =
+                        categoryName + ":" + tokenAttribute + ":" + attributeStyle;
+                    var aliasObject = { aliasOf: tokenAlias };
+                    var detailObject = {};
+                    var attributeObject = {};
+                    var categoryObject = {};
+                    let detailKey = '"' + styleDetail + '"';
+                    let styleKey = '"' + attributeStyle + '"';
+                    let attributeKey = '"' + tokenAttribute + '"';
+                    let categoryKey = '"' + categoryName + '"';
+
+                    detailObject[styleDetail] = aliasObject;
+                    var styleObject = {};
+
+                    if (styleDetail != "") {
+                        objectToken += styleDetail;
+                        styleObject[attributeStyle] = detailObject;
+                    } else {
+                        styleObject[attributeStyle] = aliasObject;
+                    }
+                    attributeObject[tokenAttribute] = styleObject;
+                    categoryObject[categoryName] = attributeObject;
+
+                    console.log(JSON.stringify(categoryObject));
+                });
+            }
+        } else {
+            node.children().forEach(child => {
+                this.exportAll(child);
+            });
+        }
+
+        return names;
+    }
+
+    private attributeForRecipeType(type: RecipeTypes): TokenAttributes {
+        var attribute = TokenAttributes.root;
+        switch (type) {
+            case RecipeTypes.backgroundFills:
+            case RecipeTypes.foregroundFills:
+            case RecipeTypes.strokeFills:
+            case RecipeTypes.cornerRadius:
+                attribute = TokenAttributes.root;
+                break;
+        }
+        return attribute;
+    }
+
+    private styleForRecipeType(type: RecipeTypes): TokenStyles {
+        var style = TokenStyles.fill;
+        switch (type) {
+            case RecipeTypes.backgroundFills:
+            case RecipeTypes.foregroundFills:
+            case RecipeTypes.strokeFills:
+                style = TokenStyles.fill;
+                break;
+            case RecipeTypes.cornerRadius:
+                style = TokenStyles.cornerRadius;
+                break;
+        }
+        return style;
+    }
 }
+
+enum TokenAttributes {
+    root = "Root",
+    text = "Text",
+    none = "Alias",
+}
+
+enum TokenStyles {
+    font = "Font",
+    fill = "Fill",
+    stroke = "Stroke",
+    cornerRadius = "Corner",
+    none = "Alias",
+}
+
+enum TokenCategories {
+    button = "Button",
+    accentButton = "AccentButton",
+    outlineButton = "OutlineButton",
+    header = "Header",
+}
+
+enum recipeAlias {
+    accentFillRest = "Global.Color.Accent",
+    accentFillLargeRest = "Global.Color.Accent",
+    neutralFillRest = "Global.Color.Grey.40",
+    neutralFillCard = "Global.Color.Grey.20",
+    neutralFillInputRest = "Global.Color.White",
+    neutralFillStealthRest = "Global.Color.White",
+    neutralFillToggleRest = "Global.Color.Grey.120",
+    neutralLayerCard = "Global.Color.White",
+    neutralLayerFloating = "Global.Color.White",
+    neutralLayerL1 = "Global.Color.White",
+    neutralLayerL1Alt = "Global.Color.Grey.20",
+    neutralLayerL2 = "Global.Color.Grey.40",
+    neutralLayerL3 = "Global.Color.Grey.60",
+    neutralLayerL4 = "Global.Color.Grey.80",
+    square = "Global.Corner.Radius.100",
+    control = "Global.Corner.Radius.100",
+    surface = "Global.Corner.Radius.100",
+    illustration = "Global.Corner.Radius.100",
+    round = "Global.Corner.Radius.100",
+}
+
+const componentNameCategoryLookup = {
+    "01. Primary Filled / ⚪️ A. Default - Light": TokenCategories.button,
+    "02. iPhone 8 / 01. Portrait / 🔵 B. Large Title + Search - Primary":
+        TokenCategories.header,
+    "Whatever Web component for button": TokenCategories.button,
+};

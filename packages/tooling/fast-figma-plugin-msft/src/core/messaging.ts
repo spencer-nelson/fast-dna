@@ -6,6 +6,7 @@ export enum MessageTypes {
     designSystem = "designSystem",
     reset = "reset",
     sync = "sync",
+    export = "export",
 }
 
 interface UIMessageBase<T extends MessageTypes> {
@@ -60,4 +61,5 @@ export type UIMessage =
     | RemoveRecipeMessage
     | DesignSystemMessage
     | UIMessageBase<MessageTypes.reset>
-    | UIMessageBase<MessageTypes.sync>;
+    | UIMessageBase<MessageTypes.sync>
+    | UIMessageBase<MessageTypes.export>;
