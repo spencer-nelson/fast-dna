@@ -257,6 +257,7 @@ export abstract class Controller {
         if (selectedNode) {
             mergedObjects = merge(mergedObjects, this.exportAll(selectedNode));
             console.log(JSON.stringify(mergedObjects));
+            figma.ui.postMessage({ type: "export-data", data: mergedObjects });
         }
     }
 
@@ -304,10 +305,7 @@ export abstract class Controller {
                             break;
                     }
 
-                    // console.log(recipeData)
                     var tokenAlias = recipeAlias[recipeData.id];
-                    var objectToken =
-                        categoryName + ":" + tokenAttribute + ":" + attributeStyle;
                     var aliasObject = { aliasOf: tokenAlias };
                     var detailObject = {};
                     var attributeObject = {};
@@ -321,7 +319,6 @@ export abstract class Controller {
                     var styleObject = {};
 
                     if (styleDetail != "") {
-                        objectToken += styleDetail;
                         styleObject[attributeStyle] = detailObject;
                     } else {
                         styleObject[attributeStyle] = aliasObject;
@@ -329,7 +326,6 @@ export abstract class Controller {
                     attributeObject[tokenAttribute] = styleObject;
                     categoryObject[categoryName] = attributeObject;
 
-                    // console.log('merging: ' + JSON.stringify(categoryObject));
                     instanceObject = merge(instanceObject, categoryObject);
                 });
 

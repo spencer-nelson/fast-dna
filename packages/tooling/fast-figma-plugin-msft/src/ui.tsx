@@ -27,6 +27,17 @@ function render(props?: PluginUIProps): void {
  */
 window.onmessage = (e: any): void => {
     render(e.data.pluginMessage);
+
+    if (e.data && e.data.pluginMessage.type === "export-data") {
+        let dataBlob = new Blob([JSON.stringify(e.data.pluginMessage.data)], {
+            type: "application/json",
+        });
+
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = "FluentTokens.json";
+        link.click();
+    }
 };
 
 // Render UI
