@@ -15,6 +15,8 @@ import { PluginNode } from "./node";
 import { RecipeRegistry, RecipeTypes } from "./recipe-registry";
 import { PluginUIActiveNodeData, PluginUIProps } from "./ui";
 
+import { merge } from "lodash";
+
 /**
  * Controller class designed to handle the business logic of the plugin.
  * The controller is designed to be agnostic to the design environment,
@@ -251,28 +253,25 @@ export abstract class Controller {
     private exportSelection(id: string): void {
         // Get the plugin node
         const selectedNode = this.getNode(id);
+        var mergedObjects = {};
         if (selectedNode) {
-            this.exportAll(selectedNode);
+            mergedObjects = merge(mergedObjects, this.exportAll(selectedNode));
+            console.log(JSON.stringify(mergedObjects));
         }
     }
 
-    private exportAll(node: PluginNode): [string] {
-        var names: [string] = [""];
-        if (!node) return names;
+    private exportAll(node: PluginNode) {
+        var mergedObjects = {};
+        if (!node) return {};
         var exportDict = {};
 
         if (node?.type == "INSTANCE") {
             const figmaNode = figma.getNodeById(node.id);
             if (figmaNode?.type == "INSTANCE") {
                 const master = figmaNode.masterComponent;
-                var categoryDict = {};
+                var instanceObject = {};
                 var categoryName = componentNameCategoryLookup[master.name];
-                if (categoryName) {
-                    categoryDict[categoryName] = {};
-                } else {
-                    // console.log ('Need name alias for ' + master.id + ' with name ' + master.name + ', using \"unknown\"')
-                    // categoryName = 'unknown'
-                }
+
                 node.recipes.forEach(id => {
                     let recipeData = this.recipeRegistry.toData(id, node);
 
@@ -330,16 +329,23 @@ export abstract class Controller {
                     attributeObject[tokenAttribute] = styleObject;
                     categoryObject[categoryName] = attributeObject;
 
-                    console.log(JSON.stringify(categoryObject));
+                    // console.log('merging: ' + JSON.stringify(categoryObject));
+                    instanceObject = merge(instanceObject, categoryObject);
                 });
+
+                // console.log('returning: ' + JSON.stringify(instanceObject));
+                return instanceObject;
             }
         } else {
             node.children().forEach(child => {
-                this.exportAll(child);
+                let tempy = this.exportAll(child);
+                // console.log('tempy: ' + JSON.stringify(tempy))
+                mergedObjects = merge(mergedObjects, tempy);
+                // console.log('Merged: ' + JSON.stringify(mergedObjects))
             });
         }
 
-        return names;
+        return mergedObjects;
     }
 
     private attributeForRecipeType(type: RecipeTypes): TokenAttributes {
