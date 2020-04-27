@@ -3,6 +3,13 @@ import { disabledCursor, display } from "../styles";
 import { focusVisible } from "../styles/focus";
 import { SystemColors } from "../styles/system-colors";
 import { heightNumber } from "../styles/size";
+import {
+    neutralForegroundActiveBehavior,
+    neutralForegroundHoverBehavior,
+    neutralForegroundRestBehavior,
+    neutralOutlineHoverBehavior,
+    neutralOutlineRestBehavior,
+} from "../styles/recipes";
 
 export const SliderStyles = css`
     :host([hidden]) {
@@ -100,10 +107,15 @@ export const SliderStyles = css`
     }
 
     @media (forced-colors: active) {
-        .thumb-cursor, .thumb-cursor:hover, .thumb-cursor:active {
+        .thumb-cursor {
             forced-color-adjust: none;
             border-color: ${SystemColors.FieldText};
             background: ${SystemColors.FieldText};
+        }
+
+        .thumb-cursor:hover,
+        .thumb-cursor:active {
+            background: ${SystemColors.Highlight};
         }
 
         .track {
@@ -117,11 +129,20 @@ export const SliderStyles = css`
 
         :host(.disabled) {
             opacity: 1;
+            cursor: ${disabledCursor};
         }
 
-        :host(.disabled) .slider .track .thumb-cursor {
+        :host(.disabled) .slider,
+        :host(.disabled) .track,
+        :host(.disabled) .thumb-cursor {
             forced-color-adjust: none;
             background: ${SystemColors.GrayText};
         }
     }
-`;
+`.withBehaviors(
+    neutralForegroundActiveBehavior,
+    neutralForegroundHoverBehavior,
+    neutralForegroundRestBehavior,
+    neutralOutlineHoverBehavior,
+    neutralOutlineRestBehavior
+);
