@@ -286,50 +286,64 @@ export abstract class Controller {
                             tokenAttribute = "Root";
                             attributeStyle = "Fill";
                             styleDetail = "Color";
+                            detailVariation = "Rest";
                             break;
                         case RecipeTypes.foregroundFills:
                             tokenAttribute = "Root";
                             attributeStyle = "Fill";
                             styleDetail = "Color";
+                            detailVariation = "Rest";
                             break;
                         case RecipeTypes.strokeFills:
                             tokenAttribute = "Root";
                             attributeStyle = "Fill";
                             styleDetail = "Color";
+                            detailVariation = "Rest";
                             break;
                         case RecipeTypes.cornerRadius:
                             tokenAttribute = "Root";
                             attributeStyle = "Corner";
+                            styleDetail = "Radius";
                             break;
                         default:
                             break;
                     }
 
+                    console.log(
+                        categoryName +
+                            ":" +
+                            tokenAttribute +
+                            ":" +
+                            attributeStyle +
+                            ":" +
+                            styleDetail +
+                            ":" +
+                            detailVariation
+                    );
                     var tokenAlias = recipeAlias[recipeData.id];
                     var aliasObject = { aliasOf: tokenAlias };
+                    var variationObject = {};
                     var detailObject = {};
+                    var styleObject = {};
                     var attributeObject = {};
                     var categoryObject = {};
-                    let detailKey = '"' + styleDetail + '"';
-                    let styleKey = '"' + attributeStyle + '"';
-                    let attributeKey = '"' + tokenAttribute + '"';
-                    let categoryKey = '"' + categoryName + '"';
 
-                    detailObject[styleDetail] = aliasObject;
-                    var styleObject = {};
+                    variationObject[detailVariation] = aliasObject;
 
-                    if (styleDetail != "") {
-                        styleObject[attributeStyle] = detailObject;
+                    if (detailVariation != "") {
+                        detailObject[styleDetail] = variationObject;
                     } else {
-                        styleObject[attributeStyle] = aliasObject;
+                        detailObject[styleDetail] = aliasObject;
                     }
+
+                    styleObject[attributeStyle] = detailObject;
                     attributeObject[tokenAttribute] = styleObject;
                     categoryObject[categoryName] = attributeObject;
 
                     instanceObject = merge(instanceObject, categoryObject);
                 });
 
-                // console.log('returning: ' + JSON.stringify(instanceObject));
+                console.log("returning: " + JSON.stringify(instanceObject));
                 return instanceObject;
             }
         } else {
