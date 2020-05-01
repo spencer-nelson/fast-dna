@@ -286,19 +286,16 @@ export abstract class Controller {
                             tokenAttribute = "Root";
                             attributeStyle = "Fill";
                             styleDetail = "Color";
-                            detailVariation = "Rest";
                             break;
                         case RecipeTypes.foregroundFills:
                             tokenAttribute = "Root";
                             attributeStyle = "Fill";
                             styleDetail = "Color";
-                            detailVariation = "Rest";
                             break;
                         case RecipeTypes.strokeFills:
                             tokenAttribute = "Root";
                             attributeStyle = "Fill";
                             styleDetail = "Color";
-                            detailVariation = "Rest";
                             break;
                         case RecipeTypes.cornerRadius:
                             tokenAttribute = "Root";
