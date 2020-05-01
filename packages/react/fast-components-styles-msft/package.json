@@ -2,7 +2,7 @@
   "name": "@microsoft/fast-components-styles-msft",
   "description": "Javascript style sheets for FAST components",
   "sideEffects": false,
-  "version": "4.28.7",
+  "version": "4.28.9",
   "author": {
     "name": "Microsoft",
     "url": "https://discord.gg/FcSNfg4"
@@ -20,6 +20,7 @@
   "scripts": {
     "clean:dist": "node ../../../build/clean.js dist",
     "clean:tmp": "node ../../../build/clean.js .tmp",
+    "coverage": "jest --coverage",
     "eslint": "eslint . --ext .ts",
     "eslint:fix": "eslint . --ext .ts --fix",
     "test": "yarn eslint && yarn unit-tests",
@@ -35,6 +36,16 @@
   },
   "jest": {
     "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "text",
+      [
+        "lcov",
+        {
+          "projectRoot": "../../../"
+        }
+      ]
+    ],
     "coverageThreshold": {
       "global": {
         "statements": 80,
@@ -67,7 +78,6 @@
     "@microsoft/eslint-config-fast-dna": "^1.1.1",
     "@types/jest": "^25.2.1",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^25.4.0",
     "eslint-config-prettier": "^6.10.1",
     "jest": "^25.4.0",
     "lodash-es": "^4.0.0",
@@ -80,12 +90,12 @@
     "typescript": "3.3.3"
   },
   "dependencies": {
-    "@microsoft/fast-colors": "^5.0.6",
+    "@microsoft/fast-colors": "^5.0.8",
     "@microsoft/fast-components-class-name-contracts-base": "^4.6.4",
     "@microsoft/fast-components-class-name-contracts-msft": "^4.8.4",
-    "@microsoft/fast-jss-manager": "^4.1.14",
-    "@microsoft/fast-jss-utilities": "^4.7.10",
-    "@microsoft/fast-web-utilities": "^4.4.3"
+    "@microsoft/fast-jss-manager": "^4.1.16",
+    "@microsoft/fast-jss-utilities": "^4.7.12",
+    "@microsoft/fast-web-utilities": "^4.4.5"
   },
   "peerDependencies": {
     "lodash-es": "^4.0.0"

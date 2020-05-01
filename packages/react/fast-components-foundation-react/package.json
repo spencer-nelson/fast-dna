@@ -2,7 +2,7 @@
   "name": "@microsoft/fast-components-foundation-react",
   "description": "FAST component foundation implemented in React.",
   "sideEffects": false,
-  "version": "3.1.6",
+  "version": "3.1.8",
   "author": {
     "name": "Microsoft",
     "url": "https://discord.gg/FcSNfg4"
@@ -20,6 +20,7 @@
   "scripts": {
     "build": "tsc -p ./tsconfig.build.json",
     "clean:dist": "node ../../../build/clean.js dist",
+    "coverage": "jest --coverage",
     "prepare": "yarn clean:dist && yarn build",
     "prettier": "prettier --config ../../../.prettierrc --write \"**/*.{ts,tsx}\"",
     "prettier:diff": "prettier --config ../../../.prettierrc \"**/*.{ts,tsx}\" --list-different",
@@ -32,6 +33,16 @@
   },
   "jest": {
     "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "text",
+      [
+        "lcov",
+        {
+          "projectRoot": "../../../"
+        }
+      ]
+    ],
     "coverageThreshold": {
       "global": {
         "statements": 80,
@@ -67,7 +78,6 @@
     "@types/node": "^9.4.6",
     "@types/react": "^16.4.18",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^25.4.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "eslint-config-prettier": "^6.10.1",
