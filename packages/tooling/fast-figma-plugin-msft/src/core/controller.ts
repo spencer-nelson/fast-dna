@@ -253,15 +253,27 @@ export abstract class Controller {
     private exportSelection(id: string): void {
         // Get the plugin node
         const selectedNode = this.getNode(id);
-        var mergedObjects = {};
+        console.log("accent base = " + selectedNode?.designSystem.accentBaseColor);
         if (selectedNode) {
-            mergedObjects = merge(mergedObjects, this.exportAll(selectedNode));
+            var mergedObjects = this.exportGlobals(selectedNode);
+            mergedObjects = merge(mergedObjects, this.exportAliases(selectedNode));
             console.log(JSON.stringify(mergedObjects));
             figma.ui.postMessage({ type: "export-data", data: mergedObjects });
         }
     }
 
-    private exportAll(node: PluginNode) {
+    private exportGlobals(node: PluginNode) {
+        // For now, just export the global accent colour
+        var mergedObjects = {
+            Global: {
+                Color: { Accent: { buildRampFrom: node.designSystem.accentBaseColor } },
+            },
+        };
+
+        return mergedObjects;
+    }
+
+    private exportAliases(node: PluginNode) {
         var mergedObjects = {};
         if (!node) return {};
         var exportDict = {};
@@ -345,7 +357,7 @@ export abstract class Controller {
             }
         } else {
             node.children().forEach(child => {
-                let tempy = this.exportAll(child);
+                let tempy = this.exportAliases(child);
                 // console.log('tempy: ' + JSON.stringify(tempy))
                 mergedObjects = merge(mergedObjects, tempy);
                 // console.log('Merged: ' + JSON.stringify(mergedObjects))
