@@ -406,8 +406,8 @@ enum TokenCategories {
 }
 
 enum recipeAlias {
-    accentFillRest = "Global.Color.Accent",
-    accentFillLargeRest = "Global.Color.Accent",
+    accentFillRest = "Set.TempAccentBkg.Fill.Color",
+    accentFillLargeRest = "Set.TempAccentBkg.Fill.Color",
     neutralFillRest = "Global.Color.Gray.40",
     neutralFillCard = "Global.Color.Gray.20",
     neutralFillInputRest = "Global.Color.White",
