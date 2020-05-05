@@ -278,10 +278,13 @@ export abstract class Controller {
         if (!node) return {};
         var exportDict = {};
 
-        if (node?.type == "INSTANCE") {
+        if (node?.type == "INSTANCE" || node?.type == "COMPONENT") {
             const figmaNode = figma.getNodeById(node.id);
-            if (figmaNode?.type == "INSTANCE") {
-                const master = figmaNode.masterComponent;
+            if (figmaNode?.type == "INSTANCE" || figmaNode?.type == "COMPONENT") {
+                var master: BaseNode = figmaNode;
+                if (figmaNode?.type == "INSTANCE") {
+                    master = (figmaNode as InstanceNode).masterComponent;
+                }
                 var instanceObject = {};
                 var categoryName = componentNameCategoryLookup[master.name];
                 if (!categoryName) {
