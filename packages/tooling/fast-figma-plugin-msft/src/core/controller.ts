@@ -432,11 +432,11 @@ enum recipeAlias {
     neutralLayerL2 = "Global.Color.Gray.40",
     neutralLayerL3 = "Global.Color.Gray.60",
     neutralLayerL4 = "Global.Color.Gray.80",
-    square = "Global.Corner.Radius.100",
-    control = "Global.Corner.Radius.100",
-    surface = "Global.Corner.Radius.100",
-    illustration = "Global.Corner.Radius.100",
-    round = "Global.Corner.Radius.100",
+    square = "Set.Square.Corner.Radius",
+    control = "Set.Control.Corner.Radius",
+    surface = "Set.Surface.Corner.Radius",
+    illustration = "Set.Illustration.Corner.Radius",
+    round = "Set.Round.Corner.Radius",
 }
 
 const componentNameCategoryLookup = {
