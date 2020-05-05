@@ -284,6 +284,14 @@ export abstract class Controller {
                 const master = figmaNode.masterComponent;
                 var instanceObject = {};
                 var categoryName = componentNameCategoryLookup[master.name];
+                if (!categoryName) {
+                    console.log("No master lookup for " + master.name);
+                    return;
+                }
+
+                // split the category name
+                // if it's 2 parts, it's iOS/Android
+                // if it's 4, it's Web/WinUI
 
                 node.recipes.forEach(id => {
                     let recipeData = this.recipeRegistry.toData(id, node);
@@ -312,23 +320,23 @@ export abstract class Controller {
                         case RecipeTypes.cornerRadius:
                             tokenAttribute = "Root";
                             attributeStyle = "Corner";
-                            styleDetail = "Radius";
+                            styleDetail = "";
                             break;
                         default:
                             break;
                     }
 
-                    console.log(
-                        categoryName +
-                            ":" +
-                            tokenAttribute +
-                            ":" +
-                            attributeStyle +
-                            ":" +
-                            styleDetail +
-                            ":" +
-                            detailVariation
-                    );
+                    // console.log(
+                    //     categoryName +
+                    //         ":" +
+                    //         tokenAttribute +
+                    //         ":" +
+                    //         attributeStyle +
+                    //         ":" +
+                    //         styleDetail +
+                    //         ":" +
+                    //         detailVariation
+                    // );
                     var tokenAlias = recipeAlias[recipeData.id];
                     var aliasObject = { aliasOf: tokenAlias };
                     var variationObject = {};
@@ -345,7 +353,11 @@ export abstract class Controller {
                         detailObject[styleDetail] = aliasObject;
                     }
 
-                    styleObject[attributeStyle] = detailObject;
+                    if (styleDetail != "") {
+                        styleObject[attributeStyle] = detailObject;
+                    } else {
+                        styleObject[attributeStyle] = aliasObject;
+                    }
                     attributeObject[tokenAttribute] = styleObject;
                     categoryObject[categoryName] = attributeObject;
 
@@ -432,21 +444,21 @@ enum recipeAlias {
     neutralLayerL2 = "Global.Color.Gray.40",
     neutralLayerL3 = "Global.Color.Gray.60",
     neutralLayerL4 = "Global.Color.Gray.80",
-    square = "Set.Square.Corner.Radius",
-    control = "Set.Control.Corner.Radius",
-    surface = "Set.Surface.Corner.Radius",
-    illustration = "Set.Illustration.Corner.Radius",
-    round = "Set.Round.Corner.Radius",
+    square = "Set.Square.Corner",
+    control = "Set.Control.Corner",
+    surface = "Set.Surface.Corner",
+    illustration = "Set.Illustration.Corner",
+    round = "Set.Round.Corner",
 }
 
 const componentNameCategoryLookup = {
-    "01. Primary Filled / ⚪️ A. Default - Light": TokenCategories.button,
+    "01. Primary Filled / ⚪️ A. Default - Light": TokenCategories.accentButton,
     "02. iPhone 8 / 01. Portrait / 🔵 B. Large Title + Search - Primary":
         TokenCategories.header,
-    "01. Primary Filled / ⚪️ B. Pressed - Light": TokenCategories.button,
-    "01. Primary Filled / ⚪️ C. Disabled - Light": TokenCategories.button,
-    "01. Primary / ⚪️ A. Default - Light": TokenCategories.button,
-    "01. Primary / ⚪️ C. Disabled - Light": TokenCategories.button,
-    "Button / State / Accent /⚡ Press": TokenCategories.button,
-    "Button / State / Accent /⚡ Disabled": TokenCategories.button,
+    "01. Primary Filled / ⚪️ B. Pressed - Light": TokenCategories.accentButton,
+    "01. Primary Filled / ⚪️ C. Disabled - Light": TokenCategories.accentButton,
+    "01. Primary / ⚪️ A. Default - Light": TokenCategories.accentButton,
+    "01. Primary / ⚪️ C. Disabled - Light": TokenCategories.accentButton,
+    "Button / State / Accent /⚡ Press": TokenCategories.accentButton,
+    "Button / State / Accent /⚡ Disabled": TokenCategories.accentButton,
 };
