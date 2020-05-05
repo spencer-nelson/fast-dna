@@ -443,10 +443,5 @@ const componentNameCategoryLookup = {
     "01. Primary Filled / ⚪️ A. Default - Light": TokenCategories.button,
     "02. iPhone 8 / 01. Portrait / 🔵 B. Large Title + Search - Primary":
         TokenCategories.header,
-    "01. Primary Filled / ⚪️ B. Pressed - Light": TokenCategories.button,
-    "01. Primary Filled / ⚪️ C. Disabled - Light": TokenCategories.button,
-    "01. Primary / ⚪️ A. Default - Light": TokenCategories.button,
-    "01. Primary / ⚪️ C. Disabled - Light": TokenCategories.button,
-    "Button / State / Accent /⚡ Press": TokenCategories.button,
-    "Button / State / Accent /⚡ Disabled": TokenCategories.button,
+    "Whatever Web component for button": TokenCategories.button,
 };
