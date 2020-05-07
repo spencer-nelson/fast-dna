@@ -464,4 +464,5 @@ const componentNameCategoryLookup = {
     "01. Primary / ⚪️ C. Disabled - Light": TokenCategories.accentButton,
     "Button / State / Accent /⚡ Press": TokenCategories.accentButton,
     "Button / State / Accent /⚡ Disabled": TokenCategories.accentButton,
+    "WinUI / Accent Button  / Pressed": TokenCategories.accentButton,
 };
